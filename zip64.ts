@@ -152,6 +152,82 @@ namespace GAME_ZIP64 {
     	_mode: ZipLedMode;
     	_matrixWidth: number;
 
+        /**
+         * Shows a rainbow pattern on all LEDs. 
+         * @param startHue the start hue value for the rainbow, eg: 1
+         * @param endHue the end hue value for the rainbow, eg: 360
+         */
+        //% subcategory=Display
+        //% blockId="set_zip64_rainbow" block="%display|show rainbow from %startHue|to %endHue" 
+        //% weight=60 blockGap=8
+        showRainbow(startHue: number = 1, endHue: number = 360) {
+            if (this._length <= 0) return;
+
+            const saturation = 100;
+            const luminance = 50;
+            const steps = this._length;
+            const direction = HueInterpolationDirection.Clockwise;
+
+            //hue
+            const h1 = startHue;
+            const h2 = endHue;
+            const hDistCW = ((h2 + 360) - h1) % 360;
+            const hStepCW = (hDistCW * 100) / steps;
+            const hDistCCW = ((h1 + 360) - h2) % 360;
+            const hStepCCW = -(hDistCCW * 100) / steps
+            let hStep: number;
+            if (direction === HueInterpolationDirection.Clockwise) {
+                hStep = hStepCW;
+            } else if (direction === HueInterpolationDirection.CounterClockwise) {
+                hStep = hStepCCW;
+            } else {
+                hStep = hDistCW < hDistCCW ? hStepCW : hStepCCW;
+            }
+            const h1_100 = h1 * 100; //we multiply by 100 so we keep more accurate results while doing interpolation
+
+            //sat
+            const s1 = saturation;
+            const s2 = saturation;
+            const sDist = s2 - s1;
+            const sStep = sDist / steps;
+            const s1_100 = s1 * 100;
+
+            //lum
+            const l1 = luminance;
+            const l2 = luminance;
+            const lDist = l2 - l1;
+            const lStep = lDist / steps;
+            const l1_100 = l1 * 100
+
+            //interpolate
+            if (steps === 1) {
+                this.setPixelColor(0, hsl(h1 + hStep, s1 + sStep, l1 + lStep))
+            } else {
+                this.setPixelColor(0, hsl(startHue, saturation, luminance));
+                for (let i = 1; i < steps - 1; i++) {
+                    const h = (h1_100 + i * hStep) / 100 + 360;
+                    const s = (s1_100 + i * sStep) / 100;
+                    const l = (l1_100 + i * lStep) / 100;
+                    this.setPixelColor(i, hsl(h, s, l));
+                }
+                this.setPixelColor(steps - 1, hsl(endHue, saturation, luminance));
+            }
+            this.show();
+        }
+
+        /**
+         * Rotate LEDs forward.
+         * You need to call ``show`` to make the changes visible.
+         * @param offset number of ZIP LEDs to rotate forward, eg: 1
+         */
+        //% subcategory=Display
+        //% blockId="zip64display_rotate" block="%display|rotate ZIP LEDs by %offset" blockGap=8
+        //% weight=50
+        rotate(offset: number = 1): void {
+            const stride = this._mode === ZipLedMode.RGBW ? 4 : 3;
+            this.buf.rotate(-offset * stride, this.start * stride, this._length * stride)
+        }
+
     	/**
          * Shows whole ZIP64 display as a given color (range 0-255 for r, g, b). 
          * @param rgb RGB color of the LED
@@ -373,5 +449,46 @@ namespace GAME_ZIP64 {
     function unpackB(rgb: number): number {
         let b = (rgb) & 0xFF;
         return b;
+    }
+
+    /**
+     * Converts a hue saturation luminosity value into a RGB color
+     */
+    function hsl(h: number, s: number, l: number): number {
+        h = h % 360;
+        s = Math.clamp(0, 99, s);
+        l = Math.clamp(0, 99, l);
+        let c = (((100 - Math.abs(2 * l - 100)) * s) << 8) / 10000; //chroma, [0,255]
+        let h1 = h / 60;//[0,6]
+        let h2 = (h - h1 * 60) * 256 / 60;//[0,255]
+        let temp = Math.abs((((h1 % 2) << 8) + h2) - 256);
+        let x = (c * (256 - (temp))) >> 8;//[0,255], second largest component of this color
+        let r$: number;
+        let g$: number;
+        let b$: number;
+        if (h1 == 0) {
+            r$ = c; g$ = x; b$ = 0;
+        } else if (h1 == 1) {
+            r$ = x; g$ = c; b$ = 0;
+        } else if (h1 == 2) {
+            r$ = 0; g$ = c; b$ = x;
+        } else if (h1 == 3) {
+            r$ = 0; g$ = x; b$ = c;
+        } else if (h1 == 4) {
+            r$ = x; g$ = 0; b$ = c;
+        } else if (h1 == 5) {
+            r$ = c; g$ = 0; b$ = x;
+        }
+        let m = ((l * 2 << 8) / 100 - c) / 2;
+        let r = r$ + m;
+        let g = g$ + m;
+        let b = b$ + m;
+        return packRGB(r, g, b);
+    }
+
+    export enum HueInterpolationDirection {
+        Clockwise,
+        CounterClockwise,
+        Shortest
     }
 } 

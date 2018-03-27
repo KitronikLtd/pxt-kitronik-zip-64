@@ -1,5 +1,5 @@
 # Kitronik blocks for micro:bit
-# pxt-kitronik-zip64
+# pxt-kitronik-zip-64
 
 Custom blocks for www.kitronik.co.uk/5626 :GAME ZIP64 for micro:bit
 
