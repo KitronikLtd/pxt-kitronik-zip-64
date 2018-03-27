@@ -1,0 +1,30 @@
+{
+    "name": "pxt-kitronik-zip-64",
+    "version": "0.0.1",
+    "description": "Blocks for driving the Kitronik :GAME ZIP64",
+    "license": "MIT",
+    "dependencies": {
+        "core": "*",
+        "ws2812b": "github:Microsoft/pxt-ws2812b#v0.0.4"
+    },
+    "files": [
+        "README.md",
+        "zip64.ts",
+        "shims.d.ts",
+        "enums.d.ts",
+        "zip64.cpp"
+    ],
+    "testFiles": [
+        "tests.ts"
+    ],
+    "yotta": {
+        "config": {
+            "microbit-dal": {
+                "bluetooth": {
+                    "enabled": 0
+                }
+            }
+        }
+    },
+    "public": true
+}
