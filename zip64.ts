@@ -109,7 +109,7 @@ namespace GAME_ZIP64 {
      * Setup micro:bit to play music through :GAME ZIP64 buzzer
      */
     //% subcategory=Feedback
-    //% blockId="buzzer_setup" block="enable buzzer" icon="\uf080"
+    //% blockId="buzzer_setup" block="set pitch pin to buzzer" icon="\uf080"
     //% weight=91 blockGap=8
     export function setBuzzerPin(): void {
         pins.analogSetPitchPin(AnalogPin.P2)
