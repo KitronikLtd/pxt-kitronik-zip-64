@@ -97,6 +97,7 @@ namespace GAME_ZIP64 {
      * @param run_time is the length of time the motor will run in ms, eg: 100
      */
     //% subcategory=Feedback
+    //% group=Feedback
     //% blockId="run_motor" block="Run motor for %run_time|ms" icon="\uf080"
     //% weight=92 blockGap=8
     export function runMotor(run_time: number): void {
@@ -109,6 +110,7 @@ namespace GAME_ZIP64 {
      * Setup micro:bit to play music through :GAME ZIP64 buzzer
      */
     //% subcategory=Feedback
+    //% group=Feedback
     //% blockId="buzzer_setup" block="set pitch pin to buzzer" icon="\uf080"
     //% weight=91 blockGap=8
     export function setBuzzerPin(): void {
@@ -120,6 +122,7 @@ namespace GAME_ZIP64 {
      * @param button press to be checked
      */
     //% subcategory=Inputs
+    //% group=Inputs
     //% blockId="zip64_ispressed" block="button %button|is pressed"
     //% button.fieldEditor="gridpicker" button.fieldOptions.columns=3
     //% weight=95 blockGap=8
@@ -135,6 +138,7 @@ namespace GAME_ZIP64 {
      * @param event happening on the button, eg: click
      */
     //% subcategory=Inputs
+    //% group=Inputs
     //% blockId="button_press_on_event" block="on button %button|press %event"
     //% button.fieldEditor="gridpicker" button.fieldOptions.columns=3
     //% weight=93 blockGap=8
@@ -158,6 +162,7 @@ namespace GAME_ZIP64 {
          * @param endHue the end hue value for the rainbow, eg: 360
          */
         //% subcategory=Display
+        //% group=Display
         //% blockId="set_zip64_rainbow" block="%display|show rainbow from %startHue|to %endHue" 
         //% weight=60 blockGap=8
         showRainbow(startHue: number = 1, endHue: number = 360) {
@@ -221,6 +226,7 @@ namespace GAME_ZIP64 {
          * @param offset number of ZIP LEDs to rotate forward, eg: 1
          */
         //% subcategory=Display
+        //% group=Display
         //% blockId="zip64display_rotate" block="%display|rotate ZIP LEDs by %offset" blockGap=8
         //% weight=50
         rotate(offset: number = 1): void {
@@ -233,6 +239,7 @@ namespace GAME_ZIP64 {
          * @param rgb RGB color of the LED
          */
         //% subcategory=Display
+        //% group=Display
         //% blockId="zip64_display_set_strip_color" block="%display|show color %rgb=zip_colors" 
         //% weight=98 blockGap=8
         
@@ -249,6 +256,7 @@ namespace GAME_ZIP64 {
          * @param rgb RGB color of the LED
          */
         //% subcategory=Display
+        //% group=Display
         //% blockId="zip64_display_set_matrix_color" block="%string|set matrix color at x %x|y %y|to %rgb=zip_colors" 
         //% weight=99
         
@@ -263,6 +271,7 @@ namespace GAME_ZIP64 {
          * Send all the changes to the ZIP64 display.
          */
         //% subcategory=Display
+        //% group=Display
         //% blockId="zip64_display_show" block="%display|show" blockGap=8
         //% weight=97
         show() {
@@ -274,6 +283,7 @@ namespace GAME_ZIP64 {
          * You need to call ``show`` to make the changes visible.
          */
         //% subcategory=Display
+        //% group=Display
         //% blockId="zip64_display_clear" block="%display|clear"
         //% weight=96
         
@@ -287,6 +297,7 @@ namespace GAME_ZIP64 {
          * @param brightness a measure of LED brightness in 0-255. eg: 255
          */
         //% subcategory=Display
+        //% group=Display
         //% blockId="zip64_display_set_brightness" block="%display|set brightness %brightness" blockGap=8
         //% weight=95
         
@@ -395,6 +406,7 @@ namespace GAME_ZIP64 {
      * Create a new ZIP LED driver for :GAME ZIP64 Display.
      */
     //% subcategory=Display
+    //% group=Display
     //% blockId="zip64_display_create" block="ZIP64 8x8 matrix display"
     //% weight=100 blockGap=8
     
@@ -419,6 +431,7 @@ namespace GAME_ZIP64 {
      * @param blue value of the blue channel between 0 and 255. eg: 255
      */
     //% subcategory=Display
+    //% group=Display
     //% weight=1
     //% blockId="zip_rgb" block="red %red|green %green|blue %blue"
     export function rgb(red: number, green: number, blue: number): number {
@@ -429,6 +442,7 @@ namespace GAME_ZIP64 {
      * Gets the RGB value of a known color
     */
     //% subcategory=Display
+    //% group=Display
     //% weight=2 blockGap=8
     //% blockId="zip_colors" block="%color"
     export function colors(color: ZipLedColors): number {
