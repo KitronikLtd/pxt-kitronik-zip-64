@@ -96,7 +96,6 @@ namespace GAME_ZIP64 {
      * Run vibration motor for a particular length of time
      * @param run_time is the length of time the motor will run in ms, eg: 100
      */
-    //% subcategory=Feedback
     //% group=Feedback
     //% blockId="run_motor" block="Run motor for %run_time|ms" icon="\uf080"
     //% weight=92 blockGap=8
