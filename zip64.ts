@@ -24,9 +24,10 @@ enum ZipLedColors {
     Black = 0x000000
 }
 /**
- * Kitronik blocks have the same colour settings
+ * Kitronik :GAME ZIP64 MakeCode Package
  */
-//% weight=100 color=#00A654 icon="\uf11b"
+//% weight=100 color=#00A654 icon="\uf11b" block=":GAME ZIP64"
+//% groups='["Display", "Inputs", "Feedback"]'
 namespace GAME_ZIP64 {
 //This is the :GAME ZIP64 Package
 
@@ -96,7 +97,6 @@ namespace GAME_ZIP64 {
      * Run vibration motor for a particular length of time
      * @param run_time is the length of time the motor will run in ms, eg: 100
      */
-    //% subcategory=Feedback
     //% group=Feedback
     //% blockId="run_motor" block="Run motor for %run_time|ms" icon="\uf080"
     //% weight=92 blockGap=8
@@ -109,7 +109,6 @@ namespace GAME_ZIP64 {
     /**
      * Setup micro:bit to play music through :GAME ZIP64 buzzer
      */
-    //% subcategory=Feedback
     //% group=Feedback
     //% blockId="buzzer_setup" block="set pitch pin to buzzer" icon="\uf080"
     //% weight=91 blockGap=8
@@ -121,7 +120,6 @@ namespace GAME_ZIP64 {
      * Determines if a :GAME ZIP64 button is pressed
      * @param button press to be checked
      */
-    //% subcategory=Inputs
     //% group=Inputs
     //% blockId="zip64_ispressed" block="button %button|is pressed"
     //% button.fieldEditor="gridpicker" button.fieldOptions.columns=3
@@ -137,7 +135,6 @@ namespace GAME_ZIP64 {
      * @param button press to be checked
      * @param event happening on the button, eg: click
      */
-    //% subcategory=Inputs
     //% group=Inputs
     //% blockId="button_press_on_event" block="on button %button|press %event"
     //% button.fieldEditor="gridpicker" button.fieldOptions.columns=3
@@ -161,13 +158,14 @@ namespace GAME_ZIP64 {
          * @param startHue the start hue value for the rainbow, eg: 1
          * @param endHue the end hue value for the rainbow, eg: 360
          */
-        //% subcategory=Display
         //% group=Display
         //% blockId="set_zip64_rainbow" block="%display|show rainbow from %startHue|to %endHue" 
         //% weight=60 blockGap=8
         showRainbow(startHue: number = 1, endHue: number = 360) {
             if (this._length <= 0) return;
 
+            startHue = startHue >> 0;
+            endHue = endHue >> 0;
             const saturation = 100;
             const luminance = 50;
             const steps = this._length;
@@ -177,9 +175,9 @@ namespace GAME_ZIP64 {
             const h1 = startHue;
             const h2 = endHue;
             const hDistCW = ((h2 + 360) - h1) % 360;
-            const hStepCW = (hDistCW * 100) / steps;
+            const hStepCW = Math.idiv((hDistCW * 100), steps);
             const hDistCCW = ((h1 + 360) - h2) % 360;
-            const hStepCCW = -(hDistCCW * 100) / steps
+            const hStepCCW = Math.idiv(-(hDistCCW * 100), steps);
             let hStep: number;
             if (direction === HueInterpolationDirection.Clockwise) {
                 hStep = hStepCW;
@@ -194,14 +192,14 @@ namespace GAME_ZIP64 {
             const s1 = saturation;
             const s2 = saturation;
             const sDist = s2 - s1;
-            const sStep = sDist / steps;
+            const sStep = Math.idiv(sDist, steps);
             const s1_100 = s1 * 100;
 
             //lum
             const l1 = luminance;
             const l2 = luminance;
             const lDist = l2 - l1;
-            const lStep = lDist / steps;
+            const lStep = Math.idiv(lDist, steps);
             const l1_100 = l1 * 100
 
             //interpolate
@@ -210,9 +208,9 @@ namespace GAME_ZIP64 {
             } else {
                 this.setPixelColor(0, hsl(startHue, saturation, luminance));
                 for (let i = 1; i < steps - 1; i++) {
-                    const h = (h1_100 + i * hStep) / 100 + 360;
-                    const s = (s1_100 + i * sStep) / 100;
-                    const l = (l1_100 + i * lStep) / 100;
+                    const h = Math.idiv((h1_100 + i * hStep), 100) + 360;
+                    const s = Math.idiv((s1_100 + i * sStep), 100);
+                    const l = Math.idiv((l1_100 + i * lStep), 100);
                     this.setPixelColor(i, hsl(h, s, l));
                 }
                 this.setPixelColor(steps - 1, hsl(endHue, saturation, luminance));
@@ -225,7 +223,6 @@ namespace GAME_ZIP64 {
          * You need to call ``show`` to make the changes visible.
          * @param offset number of ZIP LEDs to rotate forward, eg: 1
          */
-        //% subcategory=Display
         //% group=Display
         //% blockId="zip64display_rotate" block="%display|rotate ZIP LEDs by %offset" blockGap=8
         //% weight=50
@@ -238,12 +235,11 @@ namespace GAME_ZIP64 {
          * Shows whole ZIP64 display as a given color (range 0-255 for r, g, b). 
          * @param rgb RGB color of the LED
          */
-        //% subcategory=Display
         //% group=Display
         //% blockId="zip64_display_set_strip_color" block="%display|show color %rgb=zip_colors" 
         //% weight=98 blockGap=8
-        
         showColor(rgb: number) {
+            rgb = rgb >> 0;
             this.setAllRGB(rgb);
             this.show();
         }
@@ -255,13 +251,14 @@ namespace GAME_ZIP64 {
          * @param y horizontal position
          * @param rgb RGB color of the LED
          */
-        //% subcategory=Display
         //% group=Display
         //% blockId="zip64_display_set_matrix_color" block="%string|set matrix color at x %x|y %y|to %rgb=zip_colors" 
         //% weight=99
-        
         setMatrixColor(x: number, y: number, rgb: number) {
             const cols = this._length / this._matrixWidth;
+            x = x >> 0
+            y = y >> 0
+            rgb = rgb >> 0
             if (x < 0 || x >= this._matrixWidth || y < 0 || y >= cols) return;
             let i = x + y * this._matrixWidth;
             this.setPixelColor(i, rgb);
@@ -270,7 +267,6 @@ namespace GAME_ZIP64 {
         /**
          * Send all the changes to the ZIP64 display.
          */
-        //% subcategory=Display
         //% group=Display
         //% blockId="zip64_display_show" block="%display|show" blockGap=8
         //% weight=97
@@ -282,11 +278,9 @@ namespace GAME_ZIP64 {
          * Turn off all LEDs on the ZIP64 display.
          * You need to call ``show`` to make the changes visible.
          */
-        //% subcategory=Display
         //% group=Display
         //% blockId="zip64_display_clear" block="%display|clear"
         //% weight=96
-        
         clear(): void {
             const stride = this._mode === ZipLedMode.RGBW ? 4 : 3;
             this.buf.fill(0, this.start * stride, this._length * stride);
@@ -296,11 +290,9 @@ namespace GAME_ZIP64 {
          * Set the brightness of the ZIP64 display. This flag only applies to future operation.
          * @param brightness a measure of LED brightness in 0-255. eg: 255
          */
-        //% subcategory=Display
         //% group=Display
         //% blockId="zip64_display_set_brightness" block="%display|set brightness %brightness" blockGap=8
         //% weight=95
-        
         setBrightness(brightness: number): void {
             this.brightness = brightness & 0xff;
         }
@@ -309,7 +301,6 @@ namespace GAME_ZIP64 {
          * Set the pin where the ZIP LED is connected, defaults to P0.
          */
         //% weight=10
-        
         setPin(pin: DigitalPin): void {
             this.pin = pin;
             pins.digitalWritePin(this.pin, 0);
@@ -405,11 +396,9 @@ namespace GAME_ZIP64 {
     /**
      * Create a new ZIP LED driver for :GAME ZIP64 Display.
      */
-    //% subcategory=Display
     //% group=Display
     //% blockId="zip64_display_create" block="ZIP64 8x8 matrix display"
     //% weight=100 blockGap=8
-    
     //% trackArgs=0,2
     export function createZIP64Display(): ZIP64Display {
         let display = new ZIP64Display();
@@ -430,7 +419,6 @@ namespace GAME_ZIP64 {
      * @param green value of the green channel between 0 and 255. eg: 255
      * @param blue value of the blue channel between 0 and 255. eg: 255
      */
-    //% subcategory=Display
     //% group=Display
     //% weight=1
     //% blockId="zip_rgb" block="red %red|green %green|blue %blue"
@@ -441,7 +429,6 @@ namespace GAME_ZIP64 {
     /**
      * Gets the RGB value of a known color
     */
-    //% subcategory=Display
     //% group=Display
     //% weight=2 blockGap=8
     //% blockId="zip_colors" block="%color"
@@ -469,12 +456,16 @@ namespace GAME_ZIP64 {
      * Converts a hue saturation luminosity value into a RGB color
      */
     function hsl(h: number, s: number, l: number): number {
+        h = Math.round(h);
+        s = Math.round(s);
+        l = Math.round(l);
+        
         h = h % 360;
         s = Math.clamp(0, 99, s);
         l = Math.clamp(0, 99, l);
-        let c = (((100 - Math.abs(2 * l - 100)) * s) << 8) / 10000; //chroma, [0,255]
-        let h1 = h / 60;//[0,6]
-        let h2 = (h - h1 * 60) * 256 / 60;//[0,255]
+        let c = Math.idiv((((100 - Math.abs(2 * l - 100)) * s) << 8), 10000); //chroma, [0,255]
+        let h1 = Math.idiv(h, 60);//[0,6]
+        let h2 = Math.idiv((h - h1 * 60) * 256, 60);//[0,255]
         let temp = Math.abs((((h1 % 2) << 8) + h2) - 256);
         let x = (c * (256 - (temp))) >> 8;//[0,255], second largest component of this color
         let r$: number;
@@ -493,7 +484,7 @@ namespace GAME_ZIP64 {
         } else if (h1 == 5) {
             r$ = c; g$ = 0; b$ = x;
         }
-        let m = ((l * 2 << 8) / 100 - c) / 2;
+        let m = Math.idiv((Math.idiv((l * 2 << 8), 100) - c), 2);
         let r = r$ + m;
         let g = g$ + m;
         let b = b$ + m;
