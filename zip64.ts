@@ -271,7 +271,7 @@ namespace GAME_ZIP64 {
         //% blockId="zip64_display_show" block="%display|show" blockGap=8
         //% weight=97
         show() {
-            ws2812b.sendBuffer(this.buf, this.pin);
+            ws2812b.sendBuffer(this.buf, this.pin, this.brightness);
         }
 
         /**
