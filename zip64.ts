@@ -405,7 +405,7 @@ namespace GAME_ZIP64 {
         let stride = 0 === ZipLedMode.RGBW ? 4 : 3;
         display.buf = pins.createBuffer(64 * stride);
         display.start = 0;
-        display._length = 65;
+        display._length = 64;
         display._mode = 0;
         display._matrixWidth = 8;
         display.setBrightness(255)
