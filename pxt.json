@@ -1,6 +1,6 @@
 {
     "name": "pxt-kitronik-zip-64",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "Blocks for driving the Kitronik :GAME ZIP64",
     "license": "MIT",
     "dependencies": {
