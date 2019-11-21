@@ -32,18 +32,6 @@ namespace GAME_ZIP64 {
 //This is the :GAME ZIP64 Package
 
 	/**
-	 * Different modes for RGB or RGB+W ZIP strips
-	 */
-	export enum ZipLedMode {
-	    //% block="RGB (GRB format)"
-	    RGB = 0,
-	    //% block="RGB+W"
-	    RGBW = 1,
-	    //% block="RGB (RGB format)"
-	    RGB_RGB = 2
-	}
-
-	/**
 	*:GAME ZIP64 Standard Buttons
 	*/
 	export enum ZIP64Buttons {
@@ -150,7 +138,6 @@ namespace GAME_ZIP64 {
     	brightness: number;
     	start: number;
     	_length: number;
-    	_mode: ZipLedMode;
     	_matrixWidth: number;
 
         /**
@@ -227,8 +214,7 @@ namespace GAME_ZIP64 {
         //% blockId="zip64display_rotate" block="%display|rotate ZIP LEDs by %offset" blockGap=8
         //% weight=50
         rotate(offset: number = 1): void {
-            const stride = this._mode === ZipLedMode.RGBW ? 4 : 3;
-            this.buf.rotate(-offset * stride, this.start * stride, this._length * stride)
+            this.buf.rotate(-offset * 3, this.start * 3, this._length * 3)
         }
 
     	/**
@@ -252,7 +238,7 @@ namespace GAME_ZIP64 {
          * @param rgb RGB color of the LED
          */
         //% group=Display
-        //% blockId="zip64_display_set_matrix_color" block="%string|set matrix color at x %x|y %y|to %rgb=zip_colors" 
+        //% blockId="zip64_display_set_matrix_color" block="%display|set matrix color at x %x|y %y|to %rgb=zip_colors" 
         //% weight=99
         setMatrixColor(x: number, y: number, rgb: number) {
             const cols = this._length / this._matrixWidth;
@@ -271,7 +257,7 @@ namespace GAME_ZIP64 {
         //% blockId="zip64_display_show" block="%display|show" blockGap=8
         //% weight=97
         show() {
-            ws2812b.sendBuffer(this.buf, this.pin);
+            ws2812b.sendBuffer(this.buf, this.pin, this.brightness);
         }
 
         /**
@@ -282,8 +268,7 @@ namespace GAME_ZIP64 {
         //% blockId="zip64_display_clear" block="%display|clear"
         //% weight=96
         clear(): void {
-            const stride = this._mode === ZipLedMode.RGBW ? 4 : 3;
-            this.buf.fill(0, this.start * stride, this._length * stride);
+            this.buf.fill(0, this.start * 3, this._length * 3);
         }
 
         /**
@@ -294,7 +279,17 @@ namespace GAME_ZIP64 {
         //% blockId="zip64_display_set_brightness" block="%display|set brightness %brightness" blockGap=8
         //% weight=95
         setBrightness(brightness: number): void {
+            //Clamp incoming variable at 0-255 Math.clamp didnt work...
+            if(brightness <0)
+            {
+              brightness = 0
+            }
+            else if (brightness > 255)
+            {
+              brightness = 255
+            }
             this.brightness = brightness & 0xff;
+            basic.pause(1) //add a pause to stop weirdnesses
         }
 
         /**
@@ -312,13 +307,8 @@ namespace GAME_ZIP64 {
         }
 
         private setBufferRGB(offset: number, red: number, green: number, blue: number): void {
-            if (this._mode === ZipLedMode.RGB_RGB) {
-                this.buf[offset + 0] = red;
-                this.buf[offset + 1] = green;
-            } else {
-                this.buf[offset + 0] = green;
-                this.buf[offset + 1] = red;
-            }
+            this.buf[offset + 0] = green;
+            this.buf[offset + 1] = red;
             this.buf[offset + 2] = blue;
         }
 
@@ -327,31 +317,9 @@ namespace GAME_ZIP64 {
             let green = unpackG(rgb);
             let blue = unpackB(rgb);
 
-            const br = this.brightness;
-            if (br < 255) {
-                red = (red * br) >> 8;
-                green = (green * br) >> 8;
-                blue = (blue * br) >> 8;
-            }
             const end = this.start + this._length;
-            const stride = this._mode === ZipLedMode.RGBW ? 4 : 3;
             for (let i = this.start; i < end; ++i) {
-                this.setBufferRGB(i * stride, red, green, blue)
-            }
-        }
-        private setAllW(white: number) {
-            if (this._mode !== ZipLedMode.RGBW)
-                return;
-
-            let br = this.brightness;
-            if (br < 255) {
-                white = (white * br) >> 8;
-            }
-            let buf = this.buf;
-            let end = this.start + this._length;
-            for (let i = this.start; i < end; ++i) {
-                let ledoffset = i * 4;
-                buf[ledoffset + 3] = white;
+                this.setBufferRGB(i * 3, red, green, blue)
             }
         }
         private setPixelRGB(pixeloffset: number, rgb: number): void {
@@ -359,37 +327,13 @@ namespace GAME_ZIP64 {
                 || pixeloffset >= this._length)
                 return;
 
-            let stride = this._mode === ZipLedMode.RGBW ? 4 : 3;
-            pixeloffset = (pixeloffset + this.start) * stride;
+            pixeloffset = (pixeloffset + this.start) * 3;
 
             let red = unpackR(rgb);
             let green = unpackG(rgb);
             let blue = unpackB(rgb);
 
-            let br = this.brightness;
-            if (br < 255) {
-                red = (red * br) >> 8;
-                green = (green * br) >> 8;
-                blue = (blue * br) >> 8;
-            }
             this.setBufferRGB(pixeloffset, red, green, blue)
-        }
-        private setPixelW(pixeloffset: number, white: number): void {
-            if (this._mode !== ZipLedMode.RGBW)
-                return;
-
-            if (pixeloffset < 0
-                || pixeloffset >= this._length)
-                return;
-
-            pixeloffset = (pixeloffset + this.start) * 4;
-
-            let br = this.brightness;
-            if (br < 255) {
-                white = (white * br) >> 8;
-            }
-            let buf = this.buf;
-            buf[pixeloffset + 3] = white;
         }
     }
 
@@ -400,13 +344,12 @@ namespace GAME_ZIP64 {
     //% blockId="zip64_display_create" block="ZIP64 8x8 matrix display"
     //% weight=100 blockGap=8
     //% trackArgs=0,2
+    //% blockSetVariable=display
     export function createZIP64Display(): ZIP64Display {
         let display = new ZIP64Display();
-        let stride = 0 === ZipLedMode.RGBW ? 4 : 3;
-        display.buf = pins.createBuffer(64 * stride);
+        display.buf = pins.createBuffer(64 * 3);
         display.start = 0;
         display._length = 64;
-        display._mode = 0;
         display._matrixWidth = 8;
         display.setBrightness(255)
         display.setPin(DigitalPin.P0)
