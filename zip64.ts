@@ -238,7 +238,7 @@ namespace GAME_ZIP64 {
          * @param rgb RGB color of the LED
          */
         //% group=Display
-        //% blockId="zip64_display_set_matrix_color" block="%string|set matrix color at x %x|y %y|to %rgb=zip_colors" 
+        //% blockId="zip64_display_set_matrix_color" block="%display|set matrix color at x %x|y %y|to %rgb=zip_colors" 
         //% weight=99
         setMatrixColor(x: number, y: number, rgb: number) {
             const cols = this._length / this._matrixWidth;
@@ -344,6 +344,7 @@ namespace GAME_ZIP64 {
     //% blockId="zip64_display_create" block="ZIP64 8x8 matrix display"
     //% weight=100 blockGap=8
     //% trackArgs=0,2
+    //% blockSetVariable=display
     export function createZIP64Display(): ZIP64Display {
         let display = new ZIP64Display();
         display.buf = pins.createBuffer(64 * 3);
