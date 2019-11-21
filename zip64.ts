@@ -294,7 +294,17 @@ namespace GAME_ZIP64 {
         //% blockId="zip64_display_set_brightness" block="%display|set brightness %brightness" blockGap=8
         //% weight=95
         setBrightness(brightness: number): void {
+            //Clamp incoming variable at 0-255 Math.clamp didnt work...
+            if(brightness <0)
+            {
+              brightness = 0
+            }
+            else if (brightness > 255)
+            {
+              brightness = 255
+            }
             this.brightness = brightness & 0xff;
+            basic.pause(1) //add a pause to stop weirdnesses
         }
 
         /**
