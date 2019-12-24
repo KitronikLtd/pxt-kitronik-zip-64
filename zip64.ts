@@ -48,7 +48,7 @@ namespace GAME_ZIP64 {
     */
     export enum ZIP64ButtonPins {
         //% block="Joypad Up (P8)"
-        Up = <number>DAL.MICROBIT_ID_IO_P8,
+        Up = DAL.MICROBIT_ID_IO_P8,
         //% block="Joypad Down (P14)"
         Down = DAL.MICROBIT_ID_IO_P14,
         //% block="Joypad Left (P12)"
