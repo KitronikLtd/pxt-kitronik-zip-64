@@ -4,8 +4,7 @@
     "description": "Blocks for driving the Kitronik :GAME ZIP64",
     "license": "MIT",
     "dependencies": {
-        "core": "*",
-        "ws2812b": "github:KitronikLtd/pxt-ws2812b#v0.0.5"
+        "core": "*"
     },
     "files": [
         "README.md",

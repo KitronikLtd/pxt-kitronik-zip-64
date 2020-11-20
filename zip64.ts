@@ -257,7 +257,9 @@ namespace GAME_ZIP64 {
         //% blockId="zip64_display_show" block="%display|show" blockGap=8
         //% weight=97
         show() {
-            ws2812b.sendBuffer(this.buf, this.pin, this.brightness);
+            //ws2812b.sendBuffer(this.buf, this.pin, this.brightness);
+            // Use the pxt-microbit core version which now respects brightness (10/2020)
+            light.sendWS2812BufferWithBrightness(this.buf, this.pin, this.brightness);
         }
 
         /**
