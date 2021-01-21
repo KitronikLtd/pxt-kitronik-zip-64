@@ -1,4 +1,3 @@
-//#include "MicroBit.h"
 #include "pxt.h"
 using namespace pxt;
 
@@ -7,8 +6,6 @@ using namespace pxt;
  */
 //% color=#00A654 weight=100
 namespace GAME_ZIP64 {
-
-    //MicroBit uBit;
 
     bool initialized = false;
     bool pinDriveSet = false;
@@ -32,7 +29,8 @@ namespace GAME_ZIP64 {
     //%
     void pinDriveInit() {
         if (pinDriveSet) return;
-
+        //This function sets Pin 0 (the ZIP LED pin) to be in High Drive Mode if the micro:bit is V2
+        //This enables the ZIP LEDs to work across the supply voltage range, with the 470 Ohm pull up on the level shift circuit
         #if MICROBIT_CODAL
             uBit.io.P0.setHighDrive(true);
         #endif
