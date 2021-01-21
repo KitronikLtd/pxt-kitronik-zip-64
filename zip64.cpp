@@ -1,4 +1,4 @@
-#include "MicroBit.h"
+//#include "MicroBit.h"
 #include "pxt.h"
 using namespace pxt;
 
@@ -8,20 +8,10 @@ using namespace pxt;
 //% color=#00A654 weight=100
 namespace GAME_ZIP64 {
 
-    MicroBit uBit;
+    //MicroBit uBit;
+
     bool initialized = false;
     bool pinDriveSet = false;
-
-    //%
-    void pinDriveInit() {
-        if (pinDriveSet) return;
-
-        #if MICROBIT_CODAL
-            uBit.io.P0.setHighDrive(true);
-        #endif
-
-        pinDriveSet = true;
-    }
 
     //%
     void init() {
@@ -37,5 +27,16 @@ namespace GAME_ZIP64 {
         #undef ALLOC_PIN_BUTTON
 
         initialized = true;
+    }
+
+    //%
+    void pinDriveInit() {
+        if (pinDriveSet) return;
+
+        #if MICROBIT_CODAL
+            uBit.io.P0.setHighDrive(true);
+        #endif
+
+        pinDriveSet = true;
     }
 }
