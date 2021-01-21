@@ -1,3 +1,4 @@
+#include "MicroBit.h"
 #include "pxt.h"
 using namespace pxt;
 
@@ -7,9 +8,20 @@ using namespace pxt;
 //% color=#00A654 weight=100
 namespace GAME_ZIP64 {
 
+    MicroBit uBit;
     bool initialized = false;
-    int i, j;
-    int led_state;
+    bool pinDriveSet = false;
+
+    //%
+    void pinDriveInit() {
+        if (pinDriveSet) return;
+
+        #if MICROBIT_CODAL
+            uBit.io.P0.setHighDrive(true);
+        #endif
+
+        pinDriveSet = true;
+    }
 
     //%
     void init() {

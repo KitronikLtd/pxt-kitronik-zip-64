@@ -82,6 +82,14 @@ namespace GAME_ZIP64 {
     }
 
     /**
+     *
+     */
+    //% shim=GAME_ZIP64::pinDriveInit
+    function pinDriveInit(): void {
+        return;
+    }
+
+    /**
      * Run vibration motor for a particular length of time
      * @param run_time is the length of time the motor will run in ms, eg: 100
      */
@@ -348,13 +356,14 @@ namespace GAME_ZIP64 {
     //% trackArgs=0,2
     //% blockSetVariable=display
     export function createZIP64Display(): ZIP64Display {
+        pinDriveInit();
         let display = new ZIP64Display();
         display.buf = pins.createBuffer(64 * 3);
         display.start = 0;
         display._length = 64;
         display._matrixWidth = 8;
-        display.setBrightness(255)
-        display.setPin(DigitalPin.P0)
+        display.setBrightness(255);
+        display.setPin(DigitalPin.P0);
         return display;
     }
 
