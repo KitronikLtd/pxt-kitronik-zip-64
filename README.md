@@ -1,6 +1,6 @@
 # pxt-kitronik-zip-64
 
-Custom blocks for www.kitronik.co.uk/5626 :GAME ZIP64 for micro:bit. 
+Custom blocks for [Kitronik :GAME ZIP64](https://www.kitronik.co.uk/5626) for micro:bit. 
 See website for example code.
 
 ## To Use
