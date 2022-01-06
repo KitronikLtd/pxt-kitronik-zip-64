@@ -257,6 +257,19 @@ namespace GAME_ZIP64 {
             let i = x + y * this._matrixWidth;
             this.setPixelColor(i, rgb);
         }
+	    
+	/**
+         * Set LED to a given color (range 0-255 for r, g, b) in the 64 Pixel string 
+         * You need to call ``show`` to make the changes visible.
+         * @param i pixel to set
+         * @param rgb RGB color of the LED
+         */
+        //% group=Display
+        //% blockId="zip64_display_set_pixel_color" block="%display|set pixel color at %i|to %rgb=zip_colors" 
+        //% weight=99
+        setPixelColorAt(i: number, rgb: number) {
+            this.setPixelColor(i, rgb);
+        }
 
         /**
          * Send all the changes to the ZIP64 display.
