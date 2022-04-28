@@ -1,7 +1,18 @@
 // tests go here; this will not be compiled when this package is used as an extension.
-input.onButtonPressed(Button.A, function() {
+forever(() => {
+    led.toggle(0,0)
     modules.gameZipScreen.setAll(0x0f0000)
-})
-input.onButtonPressed(Button.B, function () {
-    modules.gameZipScreen.setAll(0x0000f0)
+    modules.gameZipVibrationMotor.vibrate(50, 1)
+    //music.playTone(400, 200)
+    pause(500)
+    led.toggle(1, 1)
+    modules.gameZipScreen.setAll(0x000f00)
+    modules.gameZipVibrationMotor.vibrate(50, 1)
+    //music.playTone(600, 200)
+    pause(500)
+    led.toggle(2, 2)
+    modules.gameZipScreen.setAll(0x00000f)
+    modules.gameZipVibrationMotor.vibrateMulti([20, 100, 0, 100])
+    //music.playTone(800, 200)
+    pause(500)
 })
