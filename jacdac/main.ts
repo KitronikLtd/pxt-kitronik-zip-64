@@ -15,9 +15,87 @@ namespace modules {
      */
     //% fixedInstance whenUsed block="gamezip vibration motor"
     export const gameZipVibrationMotor = new VibrationMotorClient("gamezip vibration motor?dev=self")
+
+    /**
+     * The GameZip buttons
+     */
+    //% fixedInstance whenUsed block="gamezip buttons"
+    export const gameZipButtons = new GamepadClient("gamezip buttons?dev=self")
 }
 
 namespace servers {
+    class GamepadServer extends jacdac.SensorServer {
+        constructor() {
+            super(jacdac.SRV_GAMEPAD)
+
+            const handler = () => {
+                const state = this.serializeState()
+                const buttons = state[0]
+                this.sendEvent(jacdac.GamepadEvent.ButtonsChanged,
+                    jacdac.jdpack(jacdac.GamepadEventPack.ButtonsChanged, [buttons]))
+            }
+
+            [
+                GAME_ZIP64.ZIP64ButtonPins.Left,
+                GAME_ZIP64.ZIP64ButtonPins.Right,
+                GAME_ZIP64.ZIP64ButtonPins.Up,
+                GAME_ZIP64.ZIP64ButtonPins.Down,
+                GAME_ZIP64.ZIP64ButtonPins.Fire1,
+                GAME_ZIP64.ZIP64ButtonPins.Fire2,
+            ].forEach(btn => {
+                GAME_ZIP64.onButtonPress(btn, GAME_ZIP64.ZIP64ButtonEvents.Down, handler)
+                GAME_ZIP64.onButtonPress(btn, GAME_ZIP64.ZIP64ButtonEvents.Up, handler)
+            })
+        }
+
+        serializeState() {
+            let buttons: jacdac.GamepadButtons = 0
+            let x = 0
+            let y = 0
+            if (GAME_ZIP64.buttonIsPressed(GAME_ZIP64.ZIP64ButtonPins.Left)) {
+                buttons |= jacdac.GamepadButtons.Left
+                x = -1
+            }
+            if (GAME_ZIP64.buttonIsPressed(GAME_ZIP64.ZIP64ButtonPins.Right)) {
+                buttons |= jacdac.GamepadButtons.Right
+                x = 1
+            }
+            if (GAME_ZIP64.buttonIsPressed(GAME_ZIP64.ZIP64ButtonPins.Up)) {
+                buttons |= jacdac.GamepadButtons.Up
+                x = 1
+            }
+            if (GAME_ZIP64.buttonIsPressed(GAME_ZIP64.ZIP64ButtonPins.Down)) {
+                buttons |= jacdac.GamepadButtons.Down
+                x = -1
+            }
+            if (GAME_ZIP64.buttonIsPressed(GAME_ZIP64.ZIP64ButtonPins.Left)) {
+                buttons |= jacdac.GamepadButtons.Left
+                x = -1
+            }
+            if (GAME_ZIP64.buttonIsPressed(GAME_ZIP64.ZIP64ButtonPins.Fire1)) {
+                buttons |= jacdac.GamepadButtons.A
+            }
+            if (GAME_ZIP64.buttonIsPressed(GAME_ZIP64.ZIP64ButtonPins.Fire2)) {
+                buttons |= jacdac.GamepadButtons.B
+            }
+            return jacdac.jdpack(jacdac.GamepadRegPack.Direction, [buttons, x, y])
+        }
+
+        handleCustomCommand(pkt: jacdac.JDPacket) {
+            this.handleRegValue(
+                pkt,
+                jacdac.GamepadReg.ButtonsAvailable,
+                jacdac.GamepadRegPack.ButtonsAvailable,
+                jacdac.GamepadButtons.Left
+                | jacdac.GamepadButtons.Right
+                | jacdac.GamepadButtons.Up
+                | jacdac.GamepadButtons.Down
+                | jacdac.GamepadButtons.A
+                | jacdac.GamepadButtons.B
+            )
+        }
+    }
+
     class VibrationServer extends jacdac.Server {
         private pattern: number[][]
 
@@ -71,7 +149,10 @@ namespace servers {
                     variant: jacdac.LedVariant.Matrix,
                     numColumns: 8
                 }
-                ), new VibrationServer()]
+                ),
+                new GamepadServer(),
+                new VibrationServer()
+            ]
             return servers
         })
     }
