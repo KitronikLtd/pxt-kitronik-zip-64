@@ -20,13 +20,19 @@ namespace modules {
      * The GameZip buttons
      */
     //% fixedInstance whenUsed block="gamezip buttons"
-    export const gameZipButtons = new GamepadClient("gamezip buttons?dev=self")
+    export const gameZipButtons = new GamepadClient("gamezip buttons?dev=self&buttons_available=63&variant=Gamepad")
 }
 
 namespace servers {
+    const BUTTONS_AVAILABLE = jacdac.GamepadButtons.Left
+        | jacdac.GamepadButtons.Right
+        | jacdac.GamepadButtons.Up
+        | jacdac.GamepadButtons.Down
+        | jacdac.GamepadButtons.A
+        | jacdac.GamepadButtons.B
     class GamepadServer extends jacdac.SensorServer {
         constructor() {
-            super(jacdac.SRV_GAMEPAD)
+            super(jacdac.SRV_GAMEPAD, { variant: jacdac.GamepadVariant.Gamepad })
 
             const handler = () => {
                 const state = this.serializeState()
@@ -62,15 +68,11 @@ namespace servers {
             }
             if (GAME_ZIP64.buttonIsPressed(GAME_ZIP64.ZIP64ButtonPins.Up)) {
                 buttons |= jacdac.GamepadButtons.Up
-                x = 1
+                y = 1
             }
             if (GAME_ZIP64.buttonIsPressed(GAME_ZIP64.ZIP64ButtonPins.Down)) {
                 buttons |= jacdac.GamepadButtons.Down
-                x = -1
-            }
-            if (GAME_ZIP64.buttonIsPressed(GAME_ZIP64.ZIP64ButtonPins.Left)) {
-                buttons |= jacdac.GamepadButtons.Left
-                x = -1
+                y = -1
             }
             if (GAME_ZIP64.buttonIsPressed(GAME_ZIP64.ZIP64ButtonPins.Fire1)) {
                 buttons |= jacdac.GamepadButtons.A
@@ -86,12 +88,7 @@ namespace servers {
                 pkt,
                 jacdac.GamepadReg.ButtonsAvailable,
                 jacdac.GamepadRegPack.ButtonsAvailable,
-                jacdac.GamepadButtons.Left
-                | jacdac.GamepadButtons.Right
-                | jacdac.GamepadButtons.Up
-                | jacdac.GamepadButtons.Down
-                | jacdac.GamepadButtons.A
-                | jacdac.GamepadButtons.B
+                BUTTONS_AVAILABLE
             )
         }
     }
