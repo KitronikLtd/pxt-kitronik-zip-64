@@ -14,12 +14,16 @@ namespace modules {
 namespace servers {
     function start() {
         jacdac.productIdentifier = 0x34ef625e
+        jacdac.deviceDescription = "Kitronik :GameZip64"
         jacdac.startSelfServers(() => {
             pins.digitalWritePin(DigitalPin.P0, 0)
             const servers: jacdac.Server[] = [
-                new jacdac.LedServer(jacdac.LedVariant.Matrix, 64,
+                new jacdac.LedServer(64,
                     jacdac.LedPixelLayout.RgbGrb,
-                    (pixels, brightness) => light.sendWS2812BufferWithBrightness(pixels, DigitalPin.P0, brightness)
+                    (pixels, brightness) => light.sendWS2812BufferWithBrightness(pixels, DigitalPin.P0, brightness), {
+                    variant: jacdac.LedVariant.Matrix,
+                    numColumns: 8
+                }
                 )]
             return servers
         })
