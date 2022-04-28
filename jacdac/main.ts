@@ -17,6 +17,7 @@ namespace servers {
         jacdac.deviceDescription = "Kitronik :GameZip64"
         jacdac.startSelfServers(() => {
             pins.digitalWritePin(DigitalPin.P0, 0)
+            pins.analogSetPitchPin(AnalogPin.P2)
             const servers: jacdac.Server[] = [
                 new jacdac.LedServer(64,
                     jacdac.LedPixelLayout.RgbGrb,
@@ -24,7 +25,8 @@ namespace servers {
                     variant: jacdac.LedVariant.Matrix,
                     numColumns: 8
                 }
-                )]
+                ),
+                new jacdac.BuzzerServer()]
             return servers
         })
     }
