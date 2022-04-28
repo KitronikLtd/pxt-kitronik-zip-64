@@ -135,6 +135,7 @@ namespace servers {
             const display = GAME_ZIP64.createZIP64Display()
             pins.analogSetPitchPin(AnalogPin.P2)
             const servers: jacdac.Server[] = [
+                new GamepadServer(),
                 new jacdac.LedServer(
                     64,
                     jacdac.LedPixelLayout.RgbGrb,
@@ -147,7 +148,6 @@ namespace servers {
                     numColumns: 8
                 }
                 ),
-                new GamepadServer(),
                 new VibrationServer()
             ]
             return servers
