@@ -5,10 +5,10 @@
         "core": "*",
         "microphone": "*",
         "pxt-kitronik-zip-64": "github:pelikhan/pxt-kitronik-zip-64",
-        "jacdac": "github:microsoft/pxt-jacdac#v0.10.23",
-        "jacdac-led-server": "github:microsoft/pxt-jacdac/led-server#v0.10.23",
-        "jacdac-vibration-motor": "github:microsoft/pxt-jacdac/vibration-motor#v0.10.23",
-        "jacdac-gamepad": "github:microsoft/pxt-jacdac/gamepad#v0.10.23"
+        "jacdac": "github:microsoft/pxt-jacdac#v0.10.27",
+        "jacdac-led-server": "github:microsoft/pxt-jacdac/led-server#v0.10.27",
+        "jacdac-vibration-motor": "github:microsoft/pxt-jacdac/vibration-motor#v0.10.27",
+        "jacdac-gamepad": "github:microsoft/pxt-jacdac/gamepad#v0.10.27"
     },
     "files": [
         "main.ts",
