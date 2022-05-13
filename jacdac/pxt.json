@@ -1,6 +1,6 @@
 {
     "name": "kitronik-zip-64-jacdac",
-    "version": "0.1.10",
+    "version": "0.1.11",
     "dependencies": {
         "core": "*",
         "microphone": "*",
