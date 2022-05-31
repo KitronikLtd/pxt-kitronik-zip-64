@@ -4,11 +4,11 @@
     "dependencies": {
         "core": "*",
         "microphone": "*",
-        "pxt-kitronik-zip-64": "github:pelikhan/pxt-kitronik-zip-64",
-        "jacdac": "github:microsoft/pxt-jacdac#v0.10.31",
-        "jacdac-led-server": "github:microsoft/pxt-jacdac/led-server#v0.10.31",
-        "jacdac-vibration-motor": "github:microsoft/pxt-jacdac/vibration-motor#v0.10.31",
-        "jacdac-gamepad": "github:microsoft/pxt-jacdac/gamepad#v0.10.31"
+        "pxt-kitronik-zip-64": "github:KitronikLtd/pxt-kitronik-zip-64",
+        "jacdac": "github:microsoft/pxt-jacdac#v0.10.40",
+        "jacdac-led-server": "github:microsoft/pxt-jacdac/led-server#v0.10.40",
+        "jacdac-vibration-motor": "github:microsoft/pxt-jacdac/vibration-motor#v0.10.40",
+        "jacdac-gamepad": "github:microsoft/pxt-jacdac/gamepad#v0.10.40"
     },
     "files": [
         "main.ts",
@@ -18,7 +18,7 @@
         "test.ts"
     ],
     "targetVersions": {
-        "target": "4.1.34",
+        "target": "4.1.45",
         "targetId": "microbit"
     },
     "supportedTargets": [
