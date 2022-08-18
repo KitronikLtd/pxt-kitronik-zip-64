@@ -1,0 +1,32 @@
+// tests go here; this will not be compiled when this package is used as an extension.
+forever(() => {
+    modules.gameZipScreen.setAll(0x0f0000)
+    modules.gameZipVibrationMotor.vibrate(50, 1)
+    //music.playTone(400, 200)
+    pause(500)
+    modules.gameZipScreen.setAll(0x000f00)
+    //music.playTone(600, 200)
+    pause(500)
+    modules.gameZipScreen.setAll(0x00000f)
+    modules.gameZipVibrationMotor.vibrateMulti([20, 100, 0, 100])
+    //music.playTone(800, 200)
+    pause(500)
+})
+
+control.runInParallel(() => {
+    modules.gameZipButtons.onButtonsChanged(() => {
+        basic.clearScreen()
+        if (modules.gameZipButtons.isButtonDown(jacdac.GamepadButtons.Left))
+            led.toggle(0, 1)
+        if (modules.gameZipButtons.isButtonDown(jacdac.GamepadButtons.Up))
+            led.toggle(1, 0)
+        if (modules.gameZipButtons.isButtonDown(jacdac.GamepadButtons.Down))
+            led.toggle(1, 2)
+        if (modules.gameZipButtons.isButtonDown(jacdac.GamepadButtons.Right))
+            led.toggle(2, 1)
+        if (modules.gameZipButtons.isButtonDown(jacdac.GamepadButtons.A))
+            led.toggle(4, 0)
+        if (modules.gameZipButtons.isButtonDown(jacdac.GamepadButtons.B))
+            led.toggle(4, 1)
+    })
+})
